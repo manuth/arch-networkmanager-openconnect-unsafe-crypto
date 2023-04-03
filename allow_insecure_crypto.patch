@@ -1,0 +1,25 @@
+diff --git a/auth-dialog/main.c b/auth-dialog/main.c
+index fa26426..6c4ae72 100644
+--- a/auth-dialog/main.c
++++ b/auth-dialog/main.c
+@@ -1970,6 +1970,8 @@ static gpointer init_connection (auth_ui_data *ui_data)
+ 
+ int main (int argc, char **argv)
+ {
++	g_setenv ("OPENSSL_CONF", "/usr/local/etc/ssl/openssl_insecure_crypto.cnf", FALSE);
++
+ 	char *vpn_name = NULL, *vpn_uuid = NULL, *vpn_service = NULL;
+ 	GHashTable *options = NULL, *secrets = NULL;
+ 	gboolean allow_interaction = FALSE;
+diff --git a/src/nm-openconnect-service.c b/src/nm-openconnect-service.c
+index 05e8095..ba87e93 100644
+--- a/src/nm-openconnect-service.c
++++ b/src/nm-openconnect-service.c
+@@ -447,6 +447,7 @@ nm_openconnect_start_openconnect_binary (NMOpenconnectPlugin *plugin,
+ 
+ 	openconnect_argv = g_ptr_array_new ();
+ 	g_ptr_array_add (openconnect_argv, (gpointer) (*openconnect_binary));
++	g_ptr_array_add (openconnect_argv, (gpointer) "--allow-insecure-crypto");
+ 
+ 	protocol = nm_setting_vpn_get_data_item (s_vpn, NM_OPENCONNECT_KEY_PROTOCOL);
+ 	if (protocol && strcmp (protocol, "anyconnect")) {
