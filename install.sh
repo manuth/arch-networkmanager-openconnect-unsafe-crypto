@@ -7,6 +7,9 @@ then
     sudo \
         CONTEXT_ROOT="${CONTEXT_ROOT}" \
         bash "$BASH_SOURCE";
+
+    cd "$CONTEXT_ROOT";
+    makepkg -si;
 else
     scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
     workingDir="$(pwd)";
@@ -33,5 +36,4 @@ else
             -e 'a cp "${srcdir}/'"$patchedConfig"'" "${pkgdir}/usr/local/etc/ssl/openssl_insecure_crypto.cnf"' \
         -e "}" \
         PKGBUILD
-    echo "$contextDir";
 fi;
