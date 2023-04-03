@@ -4,15 +4,17 @@ CONTEXT_ROOT="${CONTEXT_ROOT}";
 if [ ! "$UID" -eq 0 ]
 then
     CONTEXT_ROOT="$(mktemp -d)";
+    workingDir="$(pwd)";
+
     sudo \
         CONTEXT_ROOT="${CONTEXT_ROOT}" \
         bash "$BASH_SOURCE";
 
     cd "$CONTEXT_ROOT";
     makepkg -si;
+    cd "$workingDir";
 else
     scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
-    workingDir="$(pwd)";
     patchFile="allow_insecure_crypto.patch";
     patchedConfig="openssl_insecure_crypto.cnf";
     chmod a+rwx "$contextDir"
