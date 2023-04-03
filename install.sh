@@ -26,6 +26,6 @@ cp "$scriptRoot/$patchedConfig" .;
         -e "}" \
         PKGBUILD
 
-makepkg -si;
+makepkg --noconfirm -si;
 cd "$workingDir";
 rm -rf "$contextRoot";
