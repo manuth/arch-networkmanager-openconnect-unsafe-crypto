@@ -1,17 +1,21 @@
 #!/bin/bash
+CONTEXT_ROOT="${CONTEXT_ROOT}";
+
 if [ ! "$UID" -eq 0 ]
 then
-    sudo bash "$BASH_SOURCE";
+    CONTEXT_ROOT="$(mktemp -d)";
+    sudo \
+        CONTEXT_ROOT="${CONTEXT_ROOT}" \
+        bash "$BASH_SOURCE";
 else
     scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
     workingDir="$(pwd)";
-    contextDir="$(mktemp -d)";
     patchFile="allow_insecure_crypto.patch";
     patchedConfig="openssl_insecure_crypto.cnf";
     chmod a+rwx "$contextDir"
 
-    git clone https://aur.archlinux.org/networkmanager-openconnect-useragent-git.git "$contextDir";
-    cd "$contextDir";
+    git clone https://aur.archlinux.org/networkmanager-openconnect-useragent-git.git "$CONTEXT_ROOT";
+    cd "$CONTEXT_ROOT";
     cp "$scriptRoot/$patchFile" .;
     cp "$scriptRoot/$patchedConfig" .;
 
