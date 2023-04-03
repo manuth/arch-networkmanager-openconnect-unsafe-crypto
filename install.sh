@@ -26,6 +26,7 @@ else
     cp "$scriptRoot/$patchedConfig" .;
 
     sed -i \
+        -e "/^depends=(/{ s/ openconnect / openconnect-git / }" \
         -e "s/^\(source=(.*\)\()\)/\1 \"local:\/\/$patchFile\" \"local:\/\/$patchedConfig\"\2/" \
         -e "s/^\(sha256sums=(.*\)\()\)/\1 'SKIP' 'SKIP'\2/" \
         -e "/^build() {/{" \
