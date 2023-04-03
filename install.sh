@@ -13,6 +13,7 @@ then
     cd "$CONTEXT_ROOT";
     makepkg -si;
     cd "$workingDir";
+    rm -rf "$CONTEXT_ROOT";
 else
     scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
     patchFile="allow_insecure_crypto.patch";
