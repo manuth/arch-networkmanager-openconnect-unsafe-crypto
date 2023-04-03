@@ -18,7 +18,6 @@ else
     scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
     patchFile="allow_insecure_crypto.patch";
     patchedConfig="openssl_insecure_crypto.cnf";
-    chmod a+rwx "$contextDir"
 
     git clone https://aur.archlinux.org/networkmanager-openconnect-useragent-git.git "$CONTEXT_ROOT";
     cd "$CONTEXT_ROOT";
