@@ -1,28 +1,14 @@
 #!/bin/bash
-CONTEXT_ROOT="${CONTEXT_ROOT}";
+contextRoot="$(mktemp -d)";
+workingDir="$(pwd)";
+scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
+patchFile="allow_insecure_crypto.patch";
+patchedConfig="openssl_insecure_crypto.cnf";
 
-if [ ! "$UID" -eq 0 ]
-then
-    CONTEXT_ROOT="$(mktemp -d)";
-    workingDir="$(pwd)";
-
-    sudo \
-        CONTEXT_ROOT="${CONTEXT_ROOT}" \
-        bash "$BASH_SOURCE";
-
-    cd "$CONTEXT_ROOT";
-    makepkg -si;
-    cd "$workingDir";
-    rm -rf "$CONTEXT_ROOT";
-else
-    scriptRoot="$(realpath "${BASH_SOURCE%/*}")";
-    patchFile="allow_insecure_crypto.patch";
-    patchedConfig="openssl_insecure_crypto.cnf";
-
-    git clone https://aur.archlinux.org/networkmanager-openconnect-useragent-git.git "$CONTEXT_ROOT";
-    cd "$CONTEXT_ROOT";
-    cp "$scriptRoot/$patchFile" .;
-    cp "$scriptRoot/$patchedConfig" .;
+git clone https://aur.archlinux.org/networkmanager-openconnect-useragent-git.git "$contextRoot";
+cd "$contextRoot";
+cp "$scriptRoot/$patchFile" .;
+cp "$scriptRoot/$patchedConfig" .;
 
     sed -i \
         -e "/^depends=(/{ s/ openconnect / openconnect-git / }" \
@@ -39,4 +25,7 @@ else
             -e 'a cp "${srcdir}/'"$patchedConfig"'" "${pkgdir}/usr/local/etc/ssl/openssl_insecure_crypto.cnf"' \
         -e "}" \
         PKGBUILD
-fi;
+
+makepkg -si;
+cd "$workingDir";
+rm -rf "$contextRoot";
